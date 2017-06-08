@@ -9,7 +9,7 @@ module.exports = {
     __dirname + "/src/index.js"
   ],
   output: {
-    path: __dirname + "/public",
+    path: __dirname + "/build",
     filename: "bundle.js",
     publicPath: '/'
   },
@@ -39,6 +39,28 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: __dirname + "/public/index.html",
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        reduce_vars: false,
+      },
+      output: {
+        comments: false,
+      },
+      sourceMap: true,
     }),
   ],
 
