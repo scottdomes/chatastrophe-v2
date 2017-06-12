@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
   entry: [
@@ -11,7 +12,7 @@ module.exports = {
   output: {
     path: __dirname + "/build",
     filename: "bundle.js",
-    publicPath: '/'
+    publicPath: './'
   },
   module: {
   	loaders: [
@@ -21,7 +22,7 @@ module.exports = {
   			loader: 'babel-loader',
   			query: {
           presets: ['es2015','react'],
-          plugins: ['react-hot-loader/babel']
+          plugins: ['react-hot-loader/babel', 'transform-class-properties']
         }
   		},
       {
@@ -30,7 +31,19 @@ module.exports = {
           { loader: "style-loader" },
           { loader: "css-loader" }
         ]
-      }
+      },
+      {
+        exclude: [
+          /\.html$/,
+          /\.(js|jsx)$/,
+          /\.css$/,
+          /\.json$/,
+        ],
+        loader: "file-loader",
+        options: {
+          name: 'static/media/[name].[ext]',
+        },
+      },
   	]
   },
 
@@ -61,6 +74,9 @@ module.exports = {
         comments: false,
       },
       sourceMap: true,
+    }),
+    new ManifestPlugin({
+      fileName: 'asset-manifest.json',
     }),
   ],
 
