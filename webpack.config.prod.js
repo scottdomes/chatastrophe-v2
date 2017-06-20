@@ -5,8 +5,6 @@ var ManifestPlugin = require('webpack-manifest-plugin');
 module.exports = {
   entry: [
     'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:8080',
-    'webpack/hot/only-dev-server',
     __dirname + "/src/index.js"
   ],
   output: {
@@ -78,12 +76,10 @@ module.exports = {
     new ManifestPlugin({
       fileName: 'asset-manifest.json',
     }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
   ],
-
-  devServer: {
-    contentBase: "./public",
-    historyApiFallback: true,
-    inline: true,
-    hot: true
-  },
 };

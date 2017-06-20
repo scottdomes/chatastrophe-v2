@@ -233,3 +233,8 @@ button.red:focus {
   margin: 10px 0;
   height: 30px;
 }
+
+.error {
+  margin: 5px 0;
+  color: red;
+}
