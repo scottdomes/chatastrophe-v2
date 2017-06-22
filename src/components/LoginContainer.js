@@ -15,7 +15,7 @@ class LoginContainer extends Component {
 	signup() {
 		firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
 			.then(res => {
-				console.log(res)
+				this.onLogin()
 			}).catch(error => {
 				console.log(error)
 				this.setState({ error: 'Error signing up.' })
@@ -25,7 +25,7 @@ class LoginContainer extends Component {
 	login() {
 		firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
 			.then(res => {
-				console.log(res)
+				this.onLogin()
 			}).catch((error) => {
 				if (error.code === 'auth/user-not-found') {
 					this.signup()
@@ -33,6 +33,10 @@ class LoginContainer extends Component {
 					this.setState({ error: 'Error logging in.' })
 				}
 			});
+	}
+
+	onLogin() {
+		this.props.history.push('/');
 	}
 
 	handleSubmit = (event) => {
