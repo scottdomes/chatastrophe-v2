@@ -5,15 +5,23 @@ export default class ChatContainer extends Component {
   state = { newMessage: '' }
 
   handleLogout = () => {
-    firebase.auth().signOut()
+    firebase.auth().signOut();
   }
 
   handleInputChange = (e) => {
-    this.setState({ newMessage: e.target.value })
+    this.setState({ newMessage: e.target.value });
   }
 
   handleSubmit = () => {
-    this.props.onSubmit(this.state.newMessage)
+    this.props.onSubmit(this.state.newMessage);
+    this.setState({ newMessage: '' });
+  }
+
+  handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.handleSubmit();
+    }
   }
 
   render() {
@@ -31,6 +39,7 @@ export default class ChatContainer extends Component {
           <textarea 
             placeholder="Add your message..."
             onChange={this.handleInputChange}
+            onKeyDown={this.handleKeyDown}
             value={this.state.newMessage} />
           <button onClick={this.handleSubmit}>
             <svg viewBox="0 0 24 24">
