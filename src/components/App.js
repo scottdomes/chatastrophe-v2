@@ -6,7 +6,7 @@ import UserContainer from './UserContainer';
 import './app.css';
 
 class App extends Component {
-  state = { user: null, messages: [] }
+  state = { user: null, messages: [], messagesLoaded: false }
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -17,6 +17,9 @@ class App extends Component {
     });
     firebase.database().ref('/messages').on('value', snapshot => {
       this.onMessage(snapshot);
+      if (!this.state.messagesLoaded) {
+        this.setState({ messagesLoaded: true });
+      }
     });
 	}
 
@@ -44,9 +47,18 @@ class App extends Component {
 			<div id="container">
 				<Route path="/login" component={LoginContainer} />
 				<Route exact path="/" render={() => (
-          <ChatContainer onSubmit={this.handleSubmitMessage} messages={this.state.messages} />
+          <ChatContainer 
+            messagesLoaded={this.state.messagesLoaded}
+            onSubmit={this.handleSubmitMessage} 
+            messages={this.state.messages}
+            user={this.state.user} />
         )} />
-        <Route path="/users/:id" component={UserContainer} />
+        <Route path="/users/:id" render={({ history, match }) => (
+          <UserContainer 
+            messages={this.state.messages}
+            messagesLoaded={this.state.messagesLoaded}
+            userID={match.params.id}/>
+        )} />
 			</div>
 		)
 	}

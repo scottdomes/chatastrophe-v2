@@ -1,8 +1,27 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom'
 import Header from './Header';
 
 export default class ChatContainer extends Component {
   state = { newMessage: '' }
+
+  componentDidMount() {
+    this.scrollToBottom()
+  }
+
+  componentDidUpdate(previousProps) {
+    if (previousProps.messages.length !== this.props.messages.length) {
+      this.scrollToBottom()
+    }
+  }
+
+  scrollToBottom = () => {
+    const messageContainer = ReactDOM.findDOMNode(this.messageContainer);
+    if (messageContainer) {
+      messageContainer.scrollTop = messageContainer.scrollHeight;
+    }
+  }
 
   handleLogout = () => {
     firebase.auth().signOut();
@@ -32,9 +51,27 @@ export default class ChatContainer extends Component {
             Logout
           </button>
         </Header>
-				<div id="message-container">
-
-        </div>
+				{
+          this.props.messagesLoaded
+            ? <div id="message-container" ref={(element => { this.messageContainer = element })}>
+                {
+                  this.props.messages.map((msg, i) => (
+                    <div 
+                      key={msg.id} 
+                      className={`message ${this.props.user.email === msg.author && 'mine'}`}>
+                        <p>{msg.msg}</p>
+                        {
+                          (!this.props.messages[i + 1] || this.props.messages[i + 1].author !== msg.author) 
+                            && <p className="author"><Link to={`/users/${msg.user_id}`}>{msg.author}</Link></p>
+                        }
+                    </div>
+                  ))
+                }
+              </div>
+            : <div id="loading-container">
+                <img src="/assets/icon.png" alt="logo" id="loader"/>
+              </div>
+        }
         <div id="chat-input">
           <textarea 
             placeholder="Add your message..."
