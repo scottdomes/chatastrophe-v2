@@ -36,12 +36,12 @@
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('firebase-messaging-sw.js').then(function(registration) {
             // Registration was successful
-            console.log('registered!')
+            console.log('Registered!');
           }, function(err) {
             // registration failed :(
             console.log('ServiceWorker registration failed: ', err);
           }).catch(function(err) {
-            console.log(err)
+            console.log(err);
           });
         });
       } else {
