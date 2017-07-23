@@ -11,11 +11,25 @@ export default class NotificationResource {
         console.log('no access', err);
       });
     this.database.ref('/fcmTokens').on('value', snapshot => {
-      console.log(snapshot.val());
       this.allTokens = snapshot.val();
       this.tokensLoaded = true;
     });
     this.setupTokenRefresh();
+  }
+
+  changeUser(user) {
+    this.user = user;
+    this.saveTokenToServer();
+  }
+
+  findExistingToken(tokenToSave) {
+    for (let tokenKey in this.allTokens) {
+      const token = this.allTokens[tokenKey].token;
+      if (token === tokenToSave) {
+        return tokenKey;
+      }
+    }
+    return false;
   }
 
   setupTokenRefresh() {
@@ -29,11 +43,21 @@ export default class NotificationResource {
       if (this.tokensLoaded) {
         const existingToken = this.findExistingToken(res);
         if (existingToken) {
-          // Replace existing toke
+          firebase.database().ref(`/fcmTokens/${existingToken}`).set({
+            token: res,
+            user_id: this.user.uid
+          });
         } else {
-          // Create a new one
+          this.registerToken(res);
         }
       }
+    });
+  }
+
+  registerToken(token) {
+    firebase.database().ref('fcmTokens/').push({
+      token: token,
+      user_id: this.user.uid
     });
   }
 }
