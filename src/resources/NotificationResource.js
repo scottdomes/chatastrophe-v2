@@ -43,11 +43,13 @@ export default class NotificationResource {
       if (this.tokensLoaded) {
         const existingToken = this.findExistingToken(res);
         if (existingToken) {
+          console.log('old')
           firebase.database().ref(`/fcmTokens/${existingToken}`).set({
             token: res,
             user_id: this.user.uid
           });
         } else {
+          console.log('new')
           this.registerToken(res);
         }
       }

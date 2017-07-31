@@ -6,7 +6,7 @@ export default class UserContainer extends Component {
   render() {
     let renderedUserEmail = false
     return (
-      <div id="UserContainer">
+      <div id="UserContainer" className="inner-container">
         <Header>
           <Link to="/">
             <button className="red light">

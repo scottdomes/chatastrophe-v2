@@ -45,7 +45,7 @@ export default class ChatContainer extends Component {
 
   render() {
     return (
-			<div id="ChatContainer">
+			<div id="ChatContainer" className="inner-container">
 				<Header>
           <button className="red" onClick={this.handleLogout}>
             Logout

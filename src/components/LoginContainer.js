@@ -51,7 +51,7 @@ class LoginContainer extends Component {
 
   render() {
  		return (
- 			<div id="LoginContainer">
+ 			<div id="LoginContainer" className="inner-container">
  				<Header />
  				<form onSubmit={this.handleSubmit}>
 					<p>Sign in or sign up by entering your email and password.</p>
