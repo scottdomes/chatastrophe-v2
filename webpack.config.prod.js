@@ -1,6 +1,10 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
+
+const cssFilename = 'static/css/[name].[contenthash:8].css';
+const extractTextPluginOptions = { publicPath: Array(cssFilename.split('/').length).join('../') }
 
 module.exports = {
   entry: [
@@ -26,10 +30,14 @@ module.exports = {
   		},
       {
         test: /\.css$/,
-        use: [
-          { loader: "style-loader" },
-          { loader: "css-loader" }
-        ]
+        loader: ExtractTextPlugin.extract(
+          Object.assign({
+            fallback: require.resolve('style-loader'),
+            use: [
+              { loader: "css-loader" }
+            ]
+          })
+        )
       },
       {
         exclude: [
@@ -73,6 +81,9 @@ module.exports = {
         comments: false,
       },
       sourceMap: true,
+    }),
+     new ExtractTextPlugin({
+      filename: 'main.css',
     }),
     new ManifestPlugin({
       fileName: 'asset-manifest.json',
